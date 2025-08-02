@@ -7,63 +7,66 @@ struct AddItemView: View {
 
     @State private var title: String = ""
     @State private var amount: String = ""
+    @State private var currency: String = Locale.current.currency?.identifier ?? "USD"
+    @State private var type: String = "Outcome"
+    @State private var category: String = ""
+    @State private var notes: String = ""
+    @State private var date: Date = Date()
     @State private var showingAlert = false
+    @State private var alertMessage = ""
 
     private var isInputValid: Bool {
-        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && NSDecimalNumber(string: amount) != .notANumber
+        NSDecimalNumber(string: amount) != .notANumber
     }
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Details")) {
-                    TextField("Title", text: $title)
-                    TextField("Amount", text: $amount)
-                        #if os(iOS)
-                        .keyboardType(.decimalPad)
-                        #endif
-                    }
-            }
-            .navigationTitle("Add New Item")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        if isInputValid {
-                            saveItem()
+            ItemFormView(title: $title, amount: $amount, currency: $currency, type: $type, category: $category, notes: $notes, date: $date)
+                .navigationTitle("Add New Item")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
                             presentationMode.wrappedValue.dismiss()
-                        } else {
-                            showingAlert = true
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            if isInputValid {
+                                saveItem()
+                            } else {
+                                alertMessage = "Please ensure the amount is a valid number."
+                                showingAlert = true
+                            }
                         }
                     }
                 }
-            }
-            .alert(isPresented: $showingAlert) {
-                Alert(
-                    title: Text("Invalid Input"),
-                    message: Text("Please ensure the title is not empty and the amount is a valid number."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
+                .alert(isPresented: $showingAlert) {
+                    Alert(
+                        title: Text("Invalid Input"),
+                        message: Text(alertMessage),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
         }
     }
 
     private func saveItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            newItem.timestamp = date
             newItem.title = title
             newItem.amount = NSDecimalNumber(string: amount)
+            newItem.currency = currency
+            newItem.type = type
+            newItem.category = category
+            newItem.notes = notes
 
             do {
                 try viewContext.save()
+                presentationMode.wrappedValue.dismiss()
             } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                alertMessage = "Failed to save item. Please try again."
+                showingAlert = true
             }
         }
     }

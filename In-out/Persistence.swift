@@ -14,15 +14,35 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
+
+        let incomeCategories = ["Salary", "Freelance"]
+        for categoryName in incomeCategories {
+            let newCategory = Category(context: viewContext)
+            newCategory.name = categoryName
+            newCategory.type = "Income"
+        }
+
+        let outcomeCategories = ["Groceries", "Transport", "Rent"]
+        for categoryName in outcomeCategories {
+            let newCategory = Category(context: viewContext)
+            newCategory.name = categoryName
+            newCategory.type = "Outcome"
+        }
+
+        for i in 0..<10 {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
+            let isIncome = i % 3 == 0
+            newItem.type = isIncome ? "Income" : "Outcome"
+            newItem.title = isIncome ? "Sample Income" : "Sample Outcome"
+            newItem.amount = isIncome ? NSDecimalNumber(string: "\(i * 100)") : NSDecimalNumber(string: "\(i * 10)")
+            newItem.currency = "USD"
+            newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
+            newItem.notes = "This is a sample note for item \(i)."
         }
         do {
             try viewContext.save()
         } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
