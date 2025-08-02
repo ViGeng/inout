@@ -33,18 +33,44 @@ struct ItemDetailView: View {
                 )
             } else {
                 Section(header: Text("Transaction Details")) {
-                    DetailRow(label: "Title", value: item.title ?? "N/A")
-                    DetailRow(label: "Amount", value: "\(item.amount?.stringValue ?? "0") \(item.currency ?? "")", valueColor: item.type == "Income" ? .green : .primary)
-                    DetailRow(label: "Type", value: item.type ?? "N/A")
-                    DetailRow(label: "Category", value: item.category ?? "N/A")
-                    DetailRow(label: "Date", value: item.timestamp ?? Date(), formatter: itemFormatter)
-                    
-                    if let notes = item.notes, !notes.isEmpty {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Notes").font(.subheadline).foregroundColor(.gray)
-                            Text(notes)
+                    Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 12) {
+                        GridRow {
+                            Text("Title")
+                                .foregroundColor(.gray)
+                            Text(item.title ?? "N/A")
+                                .gridColumnAlignment(.leading)
                         }
-                        .padding(.vertical, 4)
+                        GridRow {
+                            Text("Amount")
+                                .foregroundColor(.gray)
+                            Text("\(item.amount?.stringValue ?? "0") \(item.currency ?? "")")
+                                .foregroundColor(item.type == "Income" ? .green : .primary)
+                        }
+                        GridRow {
+                            Text("Type")
+                                .foregroundColor(.gray)
+                            Text(item.type ?? "N/A")
+                        }
+                        GridRow {
+                            Text("Category")
+                                .foregroundColor(.gray)
+                            Text(item.category ?? "N/A")
+                        }
+                        GridRow {
+                            Text("Date")
+                                .foregroundColor(.gray)
+                            Text(item.timestamp ?? Date(), formatter: itemFormatter)
+                        }
+                        
+                        if let notes = item.notes, !notes.isEmpty {
+                            GridRow(alignment: .top) {
+                                Text("Notes")
+                                    .foregroundColor(.gray)
+                                Text(notes)
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
                     }
                 }
             }

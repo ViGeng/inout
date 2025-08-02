@@ -5,7 +5,6 @@ struct TransactionListView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @State private var searchText = ""
-    @State private var expandedItem: Item? = nil
 
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: false)],
@@ -42,44 +41,22 @@ struct TransactionListView: View {
                     ForEach(sortedGroupedItems, id: \.0) { (date, items) in
                         Section(header: Text(date, style: .date)) {
                             ForEach(items) { item in
-                                VStack(alignment: .leading) {
-                                    Button(action: {
-                                        withAnimation {
-                                            if expandedItem == item {
-                                                expandedItem = nil
-                                            } else {
-                                                expandedItem = item
-                                            }
+                                NavigationLink(destination: ItemDetailView(item: item)) {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(item.title ?? "No Title")
+                                                .font(.headline)
+                                            Text(item.category ?? "No Category")
+                                                .font(.subheadline)
                                         }
-                                    }) {
-                                        HStack {
-                                            VStack(alignment: .leading) {
-                                                Text(item.title ?? "No Title")
-                                                    .font(.headline)
-                                                Text(item.category ?? "No Category")
-                                                    .font(.subheadline)
-                                            }
-                                            Spacer()
-                                            VStack(alignment: .trailing) {
-                                                Text("\(item.amount?.stringValue ?? "") \(item.currency ?? "")")
-                                                    .foregroundColor(item.type == "Income" ? .green : .primary)
-                                                Text(item.timestamp ?? Date(), formatter: itemFormatter)
-                                                    .font(.caption)
-                                                    .foregroundColor(.gray)
-                                            }
+                                        Spacer()
+                                        VStack(alignment: .trailing) {
+                                            Text("\(item.amount?.stringValue ?? "") \(item.currency ?? "")")
+                                                .foregroundColor(item.type == "Income" ? .green : .primary)
+                                            Text(item.timestamp ?? Date(), formatter: itemFormatter)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
                                         }
-                                        .contentShape(Rectangle())
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-
-                                    if expandedItem == item {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            DetailRow(label: "Type", value: item.type ?? "N/A")
-                                            if let notes = item.notes, !notes.isEmpty {
-                                                DetailRow(label: "Notes", value: notes)
-                                            }
-                                        }
-                                        .padding(.top, 8)
                                     }
                                 }
                             }
