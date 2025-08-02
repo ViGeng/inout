@@ -16,37 +16,45 @@ struct AddItemView: View {
     @State private var alertMessage = ""
 
     private var isInputValid: Bool {
-        NSDecimalNumber(string: amount) != .notANumber
+        !amount.isEmpty && NSDecimalNumber(string: amount) != .notANumber
     }
 
     var body: some View {
         NavigationView {
-            ItemFormView(title: $title, amount: $amount, currency: $currency, type: $type, category: $category, notes: $notes, date: $date)
-                .navigationTitle("Add New Item")
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            presentationMode.wrappedValue.dismiss()
-                        }
+            ItemFormView(
+                title: $title,
+                amount: $amount,
+                currency: $currency,
+                type: $type,
+                category: $category,
+                notes: $notes,
+                date: $date
+            )
+            .navigationTitle("Add New Item")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
                     }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
-                            if isInputValid {
-                                saveItem()
-                            } else {
-                                alertMessage = "Please ensure the amount is a valid number."
-                                showingAlert = true
-                            }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        if isInputValid {
+                            saveItem()
+                        } else {
+                            alertMessage = "Please ensure the amount is a valid number."
+                            showingAlert = true
                         }
                     }
                 }
-                .alert(isPresented: $showingAlert) {
-                    Alert(
-                        title: Text("Invalid Input"),
-                        message: Text(alertMessage),
-                        dismissButton: .default(Text("OK"))
-                    )
-                }
+            }
+            .alert(isPresented: $showingAlert) {
+                Alert(
+                    title: Text("Invalid Input"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
     }
 

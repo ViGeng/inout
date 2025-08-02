@@ -12,6 +12,14 @@ struct TransactionListView: View {
     private var items: FetchedResults<Item>
     @State private var showingAddItemView = false
 
+    private var groupedItems: [Date: [Item]] {
+        groupItemsByDate(items: filteredItems)
+    }
+
+    private var sortedGroupedItems: [(Date, [Item])] {
+        groupedItems.sorted { $0.key > $1.key }
+    }
+
     var filteredItems: [Item] {
         items.filter { item in
             searchText.isEmpty ||
@@ -28,27 +36,33 @@ struct TransactionListView: View {
                     .padding(.top)
 
                 List {
-                    ForEach(filteredItems) { item in
-                        NavigationLink(destination: ItemDetailView(item: item)) {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(item.title ?? "No Title")
-                                        .font(.headline)
-                                    Text(item.category ?? "No Category")
-                                        .font(.subheadline)
-                                }
-                                Spacer()
-                                VStack(alignment: .trailing) {
-                                    Text("\(item.amount?.stringValue ?? "") \(item.currency ?? "")")
-                                        .foregroundColor(item.type == "Income" ? .green : .primary)
-                                    Text(item.timestamp ?? Date(), formatter: itemFormatter)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
+                    ForEach(sortedGroupedItems, id: \.0) { (date, items) in
+                        Section(header: Text(date, style: .date)) {
+                            ForEach(items) { item in
+                                NavigationLink(destination: ItemDetailView(item: item)) {
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(item.title ?? "No Title")
+                                                .font(.headline)
+                                            Text(item.category ?? "No Category")
+                                                .font(.subheadline)
+                                        }
+                                        Spacer()
+                                        VStack(alignment: .trailing) {
+                                            Text("\(item.amount?.stringValue ?? "") \(item.currency ?? "")")
+                                                .foregroundColor(item.type == "Income" ? .green : .primary)
+                                            Text(item.timestamp ?? Date(), formatter: itemFormatter)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
                                 }
                             }
+                            .onDelete(perform: { indexSet in
+                                deleteItems(for: date, at: indexSet)
+                            })
                         }
                     }
-                    .onDelete(perform: deleteItems)
                 }
             }
             .navigationTitle("Transactions")
@@ -83,14 +97,16 @@ struct TransactionListView: View {
         }
     }
 
-    private func deleteItems(offsets: IndexSet) {
+    private func deleteItems(for date: Date, at offsets: IndexSet) {
         withAnimation {
-            offsets.map { filteredItems[$0] }.forEach(viewContext.delete)
+            if let itemsForDate = groupedItems[date] {
+                offsets.map { itemsForDate[$0] }.forEach(viewContext.delete)
 
-            do {
-                try viewContext.save()
-            } catch {
-                // Handle the error appropriately
+                do {
+                    try viewContext.save()
+                } catch {
+                    // Handle the error appropriately
+                }
             }
         }
     }

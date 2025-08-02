@@ -7,40 +7,56 @@ struct DashboardView: View {
         animation: .default)
     private var items: FetchedResults<Item>
 
-    private var monthlySummary: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber) {
+    private var currencySummaries: [String: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber)] {
         let calendar = Calendar.current
         let currentMonthItems = items.filter { item in
             guard let date = item.timestamp else { return false }
             return calendar.isDateInCurrentMonth(date)
         }
 
-        let income = currentMonthItems
-            .filter { $0.type == "Income" }
-            .reduce(NSDecimalNumber.zero) { $0.adding($1.amount ?? .zero) }
+        var summaries: [String: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber)] = [:]
 
-        let expenses = currentMonthItems
-            .filter { $0.type == "Outcome" }
-            .reduce(NSDecimalNumber.zero) { $0.adding($1.amount ?? .zero) }
+        for item in currentMonthItems {
+            guard let currency = item.currency else { continue }
+            var summary = summaries[currency] ?? (.zero, .zero, .zero)
 
-        let balance = income.subtracting(expenses)
+            if item.type == "Income" {
+                summary.income = summary.income.adding(item.amount ?? .zero)
+            } else {
+                summary.expenses = summary.expenses.adding(item.amount ?? .zero)
+            }
+            summary.balance = summary.income.subtracting(summary.expenses)
+            summaries[currency] = summary
+        }
 
-        return (income, expenses, balance)
+        return summaries
     }
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                Text("Monthly Summary")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("Monthly Summaries")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
 
-                SummaryCard(title: "Income", amount: monthlySummary.income, color: .green)
-                SummaryCard(title: "Expenses", amount: monthlySummary.expenses, color: .red)
-                SummaryCard(title: "Balance", amount: monthlySummary.balance, color: .blue)
+                    ForEach(currencySummaries.keys.sorted(), id: \.self) { currency in
+                        let summary = currencySummaries[currency]!
+                        VStack(alignment: .leading) {
+                            Text("\(currency) Summary").font(.headline)
+                            SummaryCard(title: "Income", amount: summary.income, color: .green, currency: currency)
+                            SummaryCard(title: "Expenses", amount: summary.expenses, color: .red, currency: currency)
+                            SummaryCard(title: "Balance", amount: summary.balance, color: .blue, currency: currency)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(10)
+                    }
 
-                Spacer()
+                    Spacer()
+                }
+                .padding()
             }
-            .padding()
             .navigationTitle("Dashboard")
         }
     }
@@ -50,29 +66,19 @@ struct SummaryCard: View {
     let title: String
     let amount: NSDecimalNumber
     let color: Color
+    let currency: String
 
     var body: some View {
-        VStack {
+        HStack {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.gray)
-            Text("\(amount.stringValue) USD")
-                .font(.title)
+            Spacer()
+            Text("\(amount.stringValue) \(currency)")
+                .font(.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(color)
         }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(backgroundColor)
-        .cornerRadius(10)
-    }
-
-    private var backgroundColor: Color {
-        #if os(iOS)
-        return Color(.systemGray6)
-        #else
-        return Color(NSColor.controlBackgroundColor)
-        #endif
+        .padding(.vertical, 4)
     }
 }
 

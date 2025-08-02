@@ -22,6 +22,15 @@ extension Binding where Value: Equatable {
 
 // MARK: - Date Formatter
 
+/// A shared number formatter for handling decimal inputs consistently.
+let decimalFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    formatter.maximumFractionDigits = 2
+    formatter.minimumFractionDigits = 0
+    return formatter
+}()
+
 /// A shared date formatter for displaying timestamps consistently across the app.
 let itemFormatter: DateFormatter = {
     let formatter = DateFormatter()
@@ -29,3 +38,16 @@ let itemFormatter: DateFormatter = {
     formatter.timeStyle = .short
     return formatter
 }()
+
+// MARK: - Grouping Helper
+
+/// Groups a list of items by date.
+/// - Parameter items: The list of items to group.
+/// - Returns: A dictionary where the keys are dates and the values are the items for that date.
+func groupItemsByDate(items: [Item]) -> [Date: [Item]] {
+    let calendar = Calendar.current
+    let groupedItems = Dictionary(grouping: items) { (item) -> Date in
+        return calendar.startOfDay(for: item.timestamp ?? Date())
+    }
+    return groupedItems
+}
