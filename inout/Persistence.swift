@@ -40,6 +40,19 @@ struct PersistenceController {
             newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
             newItem.notes = "This is a sample note for item \(i)."
         }
+
+        // Add transactions for last month
+        for i in 0..<5 {
+            let newItem = Item(context: viewContext)
+            newItem.timestamp = Calendar.current.date(byAdding: .month, value: -1, to: Date())
+            let isIncome = i % 2 == 0
+            newItem.type = isIncome ? "Income" : "Outcome"
+            newItem.title = isIncome ? "Last Month Income" : "Last Month Outcome"
+            newItem.amount = isIncome ? NSDecimalNumber(string: "\(i * 150)") : NSDecimalNumber(string: "\(i * 20)")
+            newItem.currency = "EUR"
+            newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
+            newItem.notes = "This is a sample note for item \(i) from last month."
+        }
         do {
             try viewContext.save()
         } catch {
