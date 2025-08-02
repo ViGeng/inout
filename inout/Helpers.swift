@@ -39,6 +39,13 @@ let itemFormatter: DateFormatter = {
     return formatter
 }()
 
+/// A shared date formatter for displaying month and year consistently across the app.
+let monthYearFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MMMM yyyy"
+    return formatter
+}()
+
 // MARK: - Grouping Helper
 
 /// Groups a list of items by date.

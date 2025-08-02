@@ -7,18 +7,14 @@ struct DashboardView: View {
         animation: .default)
     private var items: FetchedResults<Item>
 
-    private var currencySummaries: [String: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber)] {
+    private var monthlyNettoSummaries: [Date: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber, currency: String)] {
         let calendar = Calendar.current
-        let currentMonthItems = items.filter { item in
-            guard let date = item.timestamp else { return false }
-            return calendar.isDateInCurrentMonth(date)
-        }
+        var summaries: [Date: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber, currency: String)] = [:]
 
-        var summaries: [String: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber)] = [:]
-
-        for item in currentMonthItems {
-            guard let currency = item.currency, !currency.isEmpty else { continue }
-            var summary = summaries[currency] ?? (.zero, .zero, .zero)
+        for item in items {
+            guard let date = item.timestamp else { continue }
+            let month = calendar.date(from: calendar.dateComponents([.year, .month], from: date))!
+            var summary = summaries[month] ?? (.zero, .zero, .zero, "")
 
             if item.type == "Income" {
                 summary.income = summary.income.adding(item.amount ?? .zero)
@@ -26,41 +22,59 @@ struct DashboardView: View {
                 summary.expenses = summary.expenses.adding(item.amount ?? .zero)
             }
             summary.balance = summary.income.subtracting(summary.expenses)
-            summaries[currency] = summary
-        }
 
+            // Determine dominant currency for the month
+            if let itemCurrency = item.currency, !itemCurrency.isEmpty {
+                if summary.currency.isEmpty || item.amount?.doubleValue ?? 0 > 0 { // Simple heuristic: first currency or if amount is positive
+                    summary.currency = itemCurrency
+                }
+            }
+            summaries[month] = summary
+        }
         return summaries
     }
-    
-    private var sortedSummaries: [(key: String, value: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber))] {
-        currencySummaries.sorted { $0.key < $1.key }
+
+    private var sortedMonthlyNettoSummaries: [(key: Date, value: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber, currency: String))] {
+        monthlyNettoSummaries.sorted { $0.key > $1.key }
     }
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    Text("Monthly Summaries")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-
-                    ForEach(sortedSummaries, id: \.key) { currency, summary in
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("\(currency) Summary")
-                                .font(.headline)
-                                .padding(.bottom, 5)
-                            SummaryCard(title: "Income", amount: summary.income, color: .green, currency: currency)
-                            SummaryCard(title: "Expenses", amount: summary.expenses, color: .red, currency: currency)
-                            SummaryCard(title: "Balance", amount: summary.balance, color: .blue, currency: currency)
+            List {
+                Section(header: Text("Monthly Summaries").font(.headline)) {
+                    ForEach(sortedMonthlyNettoSummaries, id: \.key) { month, summary in
+                        NavigationLink(destination: MonthlySummaryDetailView(month: month)) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("\(month, formatter: monthYearFormatter)")
+                                        .font(.headline)
+                                    Grid(alignment: .leading, horizontalSpacing: 4, verticalSpacing: 0) {
+                                        GridRow {
+                                            Text("Income:")
+                                                .gridColumnAlignment(.leading)
+                                            Text("\(summary.income.stringValue) \(summary.currency)")
+                                                .foregroundColor(.green)
+                                                .gridColumnAlignment(.trailing)
+                                        }
+                                        GridRow {
+                                            Text("Expense:")
+                                                .gridColumnAlignment(.leading)
+                                            Text("\(summary.expenses.stringValue) \(summary.currency)")
+                                                .foregroundColor(.red)
+                                                .gridColumnAlignment(.trailing)
+                                        }
+                                    }
+                                    .font(.caption)
+                                }
+                                Spacer()
+                                VStack(alignment: .trailing) {
+                                    Text("\(summary.balance.stringValue) \(summary.currency)")
+                                        .foregroundColor(summary.balance.doubleValue >= 0 ? .green : .red)
+                                }
+                            }
                         }
-                        .padding()
-                        .background(summaryBackgroundColor)
-                        .cornerRadius(10)
                     }
-
-                    Spacer()
                 }
-                .padding()
             }
             .navigationTitle("Dashboard")
         }
@@ -79,7 +93,7 @@ struct SummaryCard: View {
     let title: String
     let amount: NSDecimalNumber
     let color: Color
-    let currency: String
+    let currency: String?
 
     var body: some View {
         HStack {
@@ -87,7 +101,7 @@ struct SummaryCard: View {
                 .font(.subheadline)
                 .foregroundColor(.gray)
             Spacer()
-            Text("\(amount.stringValue) \(currency)")
+            Text("\(amount.stringValue)\(currency != nil && !currency!.isEmpty ? " " + currency! : "")")
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .foregroundColor(color)
@@ -96,8 +110,7 @@ struct SummaryCard: View {
 }
 
 extension Calendar {
-    func isDateInCurrentMonth(_ date: Date) -> Bool {
-        let now = Date()
-        return self.isDate(date, equalTo: now, toGranularity: .month)
+    func isDate(_ date: Date, inMonthOf referenceDate: Date) -> Bool {
+        return self.isDate(date, equalTo: referenceDate, toGranularity: .month)
     }
 }
