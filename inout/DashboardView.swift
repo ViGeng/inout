@@ -17,7 +17,7 @@ struct DashboardView: View {
         var summaries: [String: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber)] = [:]
 
         for item in currentMonthItems {
-            guard let currency = item.currency else { continue }
+            guard let currency = item.currency, !currency.isEmpty else { continue }
             var summary = summaries[currency] ?? (.zero, .zero, .zero)
 
             if item.type == "Income" {
@@ -31,6 +31,10 @@ struct DashboardView: View {
 
         return summaries
     }
+    
+    private var sortedSummaries: [(key: String, value: (income: NSDecimalNumber, expenses: NSDecimalNumber, balance: NSDecimalNumber))] {
+        currencySummaries.sorted { $0.key < $1.key }
+    }
 
     var body: some View {
         NavigationView {
@@ -40,16 +44,17 @@ struct DashboardView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
 
-                    ForEach(currencySummaries.keys.sorted(), id: \.self) { currency in
-                        let summary = currencySummaries[currency]!
-                        VStack(alignment: .leading) {
-                            Text("\(currency) Summary").font(.headline)
+                    ForEach(sortedSummaries, id: \.key) { currency, summary in
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("\(currency) Summary")
+                                .font(.headline)
+                                .padding(.bottom, 5)
                             SummaryCard(title: "Income", amount: summary.income, color: .green, currency: currency)
                             SummaryCard(title: "Expenses", amount: summary.expenses, color: .red, currency: currency)
                             SummaryCard(title: "Balance", amount: summary.balance, color: .blue, currency: currency)
                         }
                         .padding()
-                        .background(Color(.systemGray6))
+                        .background(summaryBackgroundColor)
                         .cornerRadius(10)
                     }
 
@@ -59,6 +64,14 @@ struct DashboardView: View {
             }
             .navigationTitle("Dashboard")
         }
+    }
+    
+    private var summaryBackgroundColor: Color {
+        #if os(iOS)
+        return Color(.systemGray6)
+        #else
+        return Color(NSColor.controlBackgroundColor)
+        #endif
     }
 }
 
@@ -71,14 +84,14 @@ struct SummaryCard: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.headline)
+                .font(.subheadline)
+                .foregroundColor(.gray)
             Spacer()
             Text("\(amount.stringValue) \(currency)")
-                .font(.headline)
-                .fontWeight(.semibold)
+                .font(.subheadline)
+                .fontWeight(.bold)
                 .foregroundColor(color)
         }
-        .padding(.vertical, 4)
     }
 }
 

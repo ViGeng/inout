@@ -12,37 +12,37 @@
 			containerPortal = B6685FFF2E0957520004740D /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B66860062E0957520004740D;
-			remoteInfo = "In-out";
+			remoteInfo = inout;
 		};
 		B66860282E0957530004740D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6685FFF2E0957520004740D /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B66860062E0957520004740D;
-			remoteInfo = "In-out";
+			remoteInfo = inout;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B66860072E0957520004740D /* In-out.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "In-out.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B668601D2E0957530004740D /* In-outTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "In-outTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B66860272E0957530004740D /* In-outUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "In-outUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B66860072E0957520004740D /* inout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B668601D2E0957530004740D /* inoutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = inoutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B66860272E0957530004740D /* inoutUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = inoutUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B66860092E0957520004740D /* In-out */ = {
+		B66860092E0957520004740D /* inout */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "In-out";
+			path = inout;
 			sourceTree = "<group>";
 		};
-		B66860202E0957530004740D /* In-outTests */ = {
+		B66860202E0957530004740D /* inoutTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "In-outTests";
+			path = inoutTests;
 			sourceTree = "<group>";
 		};
-		B668602A2E0957530004740D /* In-outUITests */ = {
+		B668602A2E0957530004740D /* inoutUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "In-outUITests";
+			path = inoutUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		B6685FFE2E0957520004740D = {
 			isa = PBXGroup;
 			children = (
-				B66860092E0957520004740D /* In-out */,
-				B66860202E0957530004740D /* In-outTests */,
-				B668602A2E0957530004740D /* In-outUITests */,
+				B66860092E0957520004740D /* inout */,
+				B66860202E0957530004740D /* inoutTests */,
+				B668602A2E0957530004740D /* inoutUITests */,
 				B66860082E0957520004740D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		B66860082E0957520004740D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B66860072E0957520004740D /* In-out.app */,
-				B668601D2E0957530004740D /* In-outTests.xctest */,
-				B66860272E0957530004740D /* In-outUITests.xctest */,
+				B66860072E0957520004740D /* inout.app */,
+				B668601D2E0957530004740D /* inoutTests.xctest */,
+				B66860272E0957530004740D /* inoutUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B66860062E0957520004740D /* In-out */ = {
+		B66860062E0957520004740D /* inout */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B66860312E0957530004740D /* Build configuration list for PBXNativeTarget "In-out" */;
+			buildConfigurationList = B66860312E0957530004740D /* Build configuration list for PBXNativeTarget "inout" */;
 			buildPhases = (
 				B66860032E0957520004740D /* Sources */,
 				B66860042E0957520004740D /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B66860092E0957520004740D /* In-out */,
+				B66860092E0957520004740D /* inout */,
 			);
-			name = "In-out";
+			name = inout;
 			packageProductDependencies = (
 			);
-			productName = "In-out";
-			productReference = B66860072E0957520004740D /* In-out.app */;
+			productName = inout;
+			productReference = B66860072E0957520004740D /* inout.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B668601C2E0957530004740D /* In-outTests */ = {
+		B668601C2E0957530004740D /* inoutTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B66860342E0957530004740D /* Build configuration list for PBXNativeTarget "In-outTests" */;
+			buildConfigurationList = B66860342E0957530004740D /* Build configuration list for PBXNativeTarget "inoutTests" */;
 			buildPhases = (
 				B66860192E0957530004740D /* Sources */,
 				B668601A2E0957530004740D /* Frameworks */,
@@ -131,18 +131,18 @@
 				B668601F2E0957530004740D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				B66860202E0957530004740D /* In-outTests */,
+				B66860202E0957530004740D /* inoutTests */,
 			);
-			name = "In-outTests";
+			name = inoutTests;
 			packageProductDependencies = (
 			);
-			productName = "In-outTests";
-			productReference = B668601D2E0957530004740D /* In-outTests.xctest */;
+			productName = inoutTests;
+			productReference = B668601D2E0957530004740D /* inoutTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B66860262E0957530004740D /* In-outUITests */ = {
+		B66860262E0957530004740D /* inoutUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B66860372E0957530004740D /* Build configuration list for PBXNativeTarget "In-outUITests" */;
+			buildConfigurationList = B66860372E0957530004740D /* Build configuration list for PBXNativeTarget "inoutUITests" */;
 			buildPhases = (
 				B66860232E0957530004740D /* Sources */,
 				B66860242E0957530004740D /* Frameworks */,
@@ -154,13 +154,13 @@
 				B66860292E0957530004740D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				B668602A2E0957530004740D /* In-outUITests */,
+				B668602A2E0957530004740D /* inoutUITests */,
 			);
-			name = "In-outUITests";
+			name = inoutUITests;
 			packageProductDependencies = (
 			);
-			productName = "In-outUITests";
-			productReference = B66860272E0957530004740D /* In-outUITests.xctest */;
+			productName = inoutUITests;
+			productReference = B66860272E0957530004740D /* inoutUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B66860022E0957520004740D /* Build configuration list for PBXProject "In-out" */;
+			buildConfigurationList = B66860022E0957520004740D /* Build configuration list for PBXProject "inout" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B66860062E0957520004740D /* In-out */,
-				B668601C2E0957530004740D /* In-outTests */,
-				B66860262E0957530004740D /* In-outUITests */,
+				B66860062E0957520004740D /* inout */,
+				B668601C2E0957530004740D /* inoutTests */,
+				B66860262E0957530004740D /* inoutUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		B668601F2E0957530004740D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B66860062E0957520004740D /* In-out */;
+			target = B66860062E0957520004740D /* inout */;
 			targetProxy = B668601E2E0957530004740D /* PBXContainerItemProxy */;
 		};
 		B66860292E0957530004740D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B66860062E0957520004740D /* In-out */;
+			target = B66860062E0957520004740D /* inout */;
 			targetProxy = B66860282E0957530004740D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -390,11 +390,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "In-out/In_out.entitlements";
+				CODE_SIGN_ENTITLEMENTS = inout/inout.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"In-out/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"inout/Preview Content\"";
 				DEVELOPMENT_TEAM = 4S3N39GQWR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -413,7 +413,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.in-out.In-out";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inout.inout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -429,11 +429,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "In-out/In_out.entitlements";
+				CODE_SIGN_ENTITLEMENTS = inout/inout.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"In-out/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"inout/Preview Content\"";
 				DEVELOPMENT_TEAM = 4S3N39GQWR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -452,7 +452,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.in-out.In-out";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inout.inout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
@@ -474,14 +474,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.in-out.In-outTests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inout.inoutTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/In-out.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/In-out";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inout.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/inout";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -497,14 +497,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.in-out.In-outTests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inout.inoutTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/In-out.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/In-out";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inout.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/inout";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -519,14 +519,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.in-out.In-outUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inout.inoutUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = "In-out";
+				TEST_TARGET_NAME = inout;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -541,14 +541,14 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.in-out.In-outUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.inout.inoutUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = "In-out";
+				TEST_TARGET_NAME = inout;
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -556,7 +556,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B66860022E0957520004740D /* Build configuration list for PBXProject "In-out" */ = {
+		B66860022E0957520004740D /* Build configuration list for PBXProject "inout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B668602F2E0957530004740D /* Debug */,
@@ -565,7 +565,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B66860312E0957530004740D /* Build configuration list for PBXNativeTarget "In-out" */ = {
+		B66860312E0957530004740D /* Build configuration list for PBXNativeTarget "inout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B66860322E0957530004740D /* Debug */,
@@ -574,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B66860342E0957530004740D /* Build configuration list for PBXNativeTarget "In-outTests" */ = {
+		B66860342E0957530004740D /* Build configuration list for PBXNativeTarget "inoutTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B66860352E0957530004740D /* Debug */,
@@ -583,7 +583,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B66860372E0957530004740D /* Build configuration list for PBXNativeTarget "In-outUITests" */ = {
+		B66860372E0957530004740D /* Build configuration list for PBXNativeTarget "inoutUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B66860382E0957530004740D /* Debug */,
