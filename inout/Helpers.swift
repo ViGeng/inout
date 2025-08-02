@@ -26,7 +26,7 @@ extension Binding where Value: Equatable {
 let decimalFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
-    formatter.maximumFractionDigits = 2
+    formatter.maximumFractionDigits = 0
     formatter.minimumFractionDigits = 0
     return formatter
 }()

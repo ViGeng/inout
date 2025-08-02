@@ -14,21 +14,17 @@ struct DashboardView: View {
         for item in items {
             guard let date = item.timestamp else { continue }
             let month = calendar.date(from: calendar.dateComponents([.year, .month], from: date))!
-            var summary = summaries[month] ?? (.zero, .zero, .zero, "")
+            var summary = summaries[month] ?? (.zero, .zero, .zero, CurrencyConverter.localCurrencyCode)
+
+            let convertedAmount = CurrencyConverter.convertToLocalCurrency(item.amount ?? .zero, from: item.currency ?? "")
 
             if item.type == "Income" {
-                summary.income = summary.income.adding(item.amount ?? .zero)
+                summary.income = summary.income.adding(convertedAmount)
             } else {
-                summary.expenses = summary.expenses.adding(item.amount ?? .zero)
+                summary.expenses = summary.expenses.adding(convertedAmount)
             }
             summary.balance = summary.income.subtracting(summary.expenses)
-
-            // Determine dominant currency for the month
-            if let itemCurrency = item.currency, !itemCurrency.isEmpty {
-                if summary.currency.isEmpty || item.amount?.doubleValue ?? 0 > 0 { // Simple heuristic: first currency or if amount is positive
-                    summary.currency = itemCurrency
-                }
-            }
+            summary.currency = CurrencyConverter.localCurrencyCode
             summaries[month] = summary
         }
         return summaries
@@ -52,14 +48,14 @@ struct DashboardView: View {
                                         GridRow {
                                             Text("Income:")
                                                 .gridColumnAlignment(.leading)
-                                            Text("\(summary.income.stringValue) \(summary.currency)")
+                                            Text("\(decimalFormatter.string(from: summary.income) ?? "0") \(summary.currency)")
                                                 .foregroundColor(.green)
                                                 .gridColumnAlignment(.trailing)
                                         }
                                         GridRow {
                                             Text("Expense:")
                                                 .gridColumnAlignment(.leading)
-                                            Text("\(summary.expenses.stringValue) \(summary.currency)")
+                                            Text("\(decimalFormatter.string(from: summary.expenses) ?? "0") \(summary.currency)")
                                                 .foregroundColor(.red)
                                                 .gridColumnAlignment(.trailing)
                                         }
@@ -68,7 +64,7 @@ struct DashboardView: View {
                                 }
                                 Spacer()
                                 VStack(alignment: .trailing) {
-                                    Text("\(summary.balance.stringValue) \(summary.currency)")
+                                    Text("\(decimalFormatter.string(from: summary.balance) ?? "0") \(summary.currency)")
                                         .foregroundColor(summary.balance.doubleValue >= 0 ? .green : .red)
                                 }
                             }
@@ -101,7 +97,7 @@ struct SummaryCard: View {
                 .font(.subheadline)
                 .foregroundColor(.gray)
             Spacer()
-            Text("\(amount.stringValue)\(currency != nil && !currency!.isEmpty ? " " + currency! : "")")
+            Text("\(decimalFormatter.string(from: amount) ?? "0")\(currency != nil && !currency!.isEmpty ? " " + currency! : "")")
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .foregroundColor(color)
