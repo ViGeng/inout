@@ -25,14 +25,14 @@ struct ItemFormView: View {
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                .onChange(of: type) {
+                .onChange(of: type, perform: { newType in
                     // When type changes, try to set a default category for the new type
-                    if let firstCategory = categories.first(where: { $0.type == type }) {
+                    if let firstCategory = categories.first(where: { $0.type == newType }) {
                         category = firstCategory.name ?? ""
                     } else {
                         category = "" // No categories for this type
                     }
-                }
+                })
 
                 TextField("Title", text: $title)
                 TextField("Amount", text: $amount)

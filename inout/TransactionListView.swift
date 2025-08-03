@@ -52,7 +52,7 @@ struct TransactionListView: View {
                                         Spacer()
                                         VStack(alignment: .trailing) {
                                             Text("\(item.amount?.stringValue ?? "") \(item.currency ?? "")")
-                                                .foregroundColor(item.type == "Income" ? .green : .primary)
+                                                .foregroundColor(item.type == "Income" ? .green : .blue)
                                             Text(item.timestamp ?? Date(), formatter: itemFormatter)
                                                 .font(.caption)
                                                 .foregroundColor(.gray)

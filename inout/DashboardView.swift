@@ -56,7 +56,7 @@ struct DashboardView: View {
                                             Text("Expense:")
                                                 .gridColumnAlignment(.leading)
                                             Text("\(decimalFormatter.string(from: summary.expenses) ?? "0") \(summary.currency)")
-                                                .foregroundColor(.red)
+                                                .foregroundColor(.blue)
                                                 .gridColumnAlignment(.trailing)
                                         }
                                     }

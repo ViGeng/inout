@@ -44,7 +44,7 @@ struct ItemDetailView: View {
                             Text("Amount")
                                 .foregroundColor(.gray)
                             Text("\(item.amount?.stringValue ?? "0") \(item.currency ?? "")")
-                                .foregroundColor(item.type == "Income" ? .green : .primary)
+                                .foregroundColor(item.type == "Income" ? .green : .blue)
                         }
                         GridRow {
                             Text("Type")
