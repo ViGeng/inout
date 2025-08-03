@@ -23,5 +23,6 @@ A simple iOS and macOS app for tracking items with titles, amounts, and timestam
 ## Roadmap
 
 *   **Photo Attachment:** Add functionality to attach one or more photos (e.g., invoices, item receipts) to transactions.
-*   **Export/Import:** Implement features to export and import transaction data.
 *   **iCloud Sync:** Integrate iCloud synchronization for seamless data access across devices.
+*   **Recurring Transactions:** Add support for recurring transactions to automate regular entries, such as monthly bills or subscriptions.
+*   **Export/Import:** Implement features to export and import transaction data.

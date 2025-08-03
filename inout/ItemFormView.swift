@@ -26,11 +26,10 @@ struct ItemFormView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .onChange(of: type, perform: { newType in
-                    // When type changes, try to set a default category for the new type
-                    if let firstCategory = categories.first(where: { $0.type == newType }) {
-                        category = firstCategory.name ?? ""
-                    } else {
-                        category = "" // No categories for this type
+                    // When type changes, ensure a valid category is selected
+                    let filteredCategories = categories.filter { $0.type == newType }
+                    if !filteredCategories.contains(where: { $0.name == category }) {
+                        category = filteredCategories.first?.name ?? "" // Set to first valid category or empty
                     }
                 })
 
@@ -54,11 +53,10 @@ struct ItemFormView: View {
             }
         }
         .onAppear {
-            // Set a default category if none is selected and categories exist for the current type
-            if category.isEmpty {
-                if let firstCategory = categories.first(where: { $0.type == type }) {
-                    category = firstCategory.name ?? ""
-                }
+            // On appear, ensure the selected category is valid for the current type
+            let filteredCategories = categories.filter { $0.type == type }
+            if !filteredCategories.contains(where: { $0.name == category }) {
+                category = filteredCategories.first?.name ?? "" // Set to first valid category or empty
             }
         }
     }
