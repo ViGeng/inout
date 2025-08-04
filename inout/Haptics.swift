@@ -1,5 +1,6 @@
 import Foundation
 import CoreHaptics
+import UIKit
 
 class HapticManager {
     static let shared = HapticManager()
@@ -20,20 +21,17 @@ class HapticManager {
     }
 
     func playSuccess() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
-        var events = [CHHapticEvent]()
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
 
-        let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
-        let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
-        let event = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: 0)
-        events.append(event)
+    func playSelection() {
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
+    }
 
-        do {
-            let pattern = try CHHapticPattern(events: events, parameters: [])
-            let player = try engine?.makePlayer(with: pattern)
-            try player?.start(atTime: 0)
-        } catch {
-            print("Failed to play pattern: \(error.localizedDescription).")
-        }
+    func playPeek() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
 }

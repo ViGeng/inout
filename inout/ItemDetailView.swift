@@ -6,6 +6,14 @@ struct ItemDetailView: View {
     @ObservedObject var item: Item
 
     @State private var showingEditItemView = false
+    @State private var selectedPhoto: Photo? = nil
+
+    private var photoArray: [Photo] {
+        if let photos = item.photos?.array as? [Photo] {
+            return photos
+        }
+        return []
+    }
 
     var body: some View {
         Form {
@@ -50,6 +58,29 @@ struct ItemDetailView: View {
                     }
                 }
             }
+
+            if !photoArray.isEmpty {
+                Section(header: Text("Photos")) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(photoArray) { photo in
+                                if let uiImage = PhotoManager.shared.getPhoto(for: photo) {
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 100)
+                                        .cornerRadius(10)
+                                        .clipped()
+                                        .onTapGesture {
+                                            HapticManager.shared.playPeek()
+                                            selectedPhoto = photo
+                                        }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         .navigationTitle("Details")
         .toolbar {
@@ -61,6 +92,17 @@ struct ItemDetailView: View {
         }
         .sheet(isPresented: $showingEditItemView) {
             EditItemView(item: item)
+        }
+        .sheet(item: $selectedPhoto) { photo in
+            if let uiImage = PhotoManager.shared.getPhoto(for: photo) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        selectedPhoto = nil
+                    }
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ struct EditItemView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var item: Item
 
-    // State for the form fields, initialized from the item
+    // State for the form fields
     @State private var title: String = ""
     @State private var amountString: String = ""
     @State private var currency: String = ""
@@ -14,6 +14,8 @@ struct EditItemView: View {
     @State private var category: String = ""
     @State private var notes: String = ""
     @State private var date: Date = Date()
+    @State private var selectedPhotoData: [Data] = []
+    @State private var existingPhotos: [Photo] = []
 
     // Alert state
     @State private var showingAlert = false
@@ -32,7 +34,8 @@ struct EditItemView: View {
                 type: $type,
                 category: $category,
                 notes: $notes,
-                date: $date
+                date: $date,
+                selectedPhotoData: $selectedPhotoData
             )
             .navigationTitle("Edit Item")
             .toolbar {
@@ -71,11 +74,17 @@ struct EditItemView: View {
         category = item.category ?? ""
         notes = item.notes ?? ""
         date = item.timestamp ?? Date()
+        
+        if let photos = item.photos?.array as? [Photo] {
+            existingPhotos = photos
+            selectedPhotoData = existingPhotos.compactMap { photo in
+                PhotoManager.shared.getPhoto(for: photo)?.jpegData(compressionQuality: 1.0)
+            }
+        }
     }
 
     private func saveItem() {
         withAnimation {
-            // --- Amount validation ---
             if amountString.isEmpty {
                 item.amount = nil
             } else {
@@ -83,12 +92,11 @@ struct EditItemView: View {
                 if potentialAmount == .notANumber {
                     alertMessage = "Please ensure the amount is a valid number."
                     showingAlert = true
-                    return // Stop execution
+                    return
                 }
                 item.amount = potentialAmount
             }
 
-            // --- Update other properties ---
             item.title = title.isEmpty ? nil : title
             item.currency = currency
             item.type = type
@@ -96,7 +104,26 @@ struct EditItemView: View {
             item.notes = notes.isEmpty ? nil : notes
             item.timestamp = date
 
-            // --- Save to Core Data ---
+            let currentPhotoData = existingPhotos.compactMap { PhotoManager.shared.getPhoto(for: $0)?.jpegData(compressionQuality: 1.0) }
+            let photosToDelete = existingPhotos.filter { photo in
+                guard let data = PhotoManager.shared.getPhoto(for: photo)?.jpegData(compressionQuality: 1.0) else { return false }
+                return !selectedPhotoData.contains(data)
+            }
+
+            for photo in photosToDelete {
+                PhotoManager.shared.deletePhoto(photo: photo, context: viewContext)
+            }
+            
+            let newPhotoData = selectedPhotoData.filter { data in
+                !currentPhotoData.contains(data)
+            }
+
+            for data in newPhotoData {
+                if let image = UIImage(data: data) {
+                    _ = PhotoManager.shared.savePhoto(image: image, for: item, context: viewContext)
+                }
+            }
+
             do {
                 try viewContext.saveWithHaptics()
                 presentationMode.wrappedValue.dismiss()

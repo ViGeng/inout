@@ -63,10 +63,26 @@ func groupItemsByDate(items: [Item]) -> [Date: [Item]] {
 extension NSManagedObjectContext {
     func saveWithHaptics() throws {
         do {
+            try deleteOrphanedPhotos()
             try save()
             HapticManager.shared.playSuccess()
         } catch {
             throw error
+        }
+    }
+
+    private func deleteOrphanedPhotos() throws {
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        let allPhotos = try self.fetch(fetchRequest)
+        let activeFilenames = allPhotos.compactMap { $0.item != nil ? $0.filename : nil }
+        
+        let photoManager = PhotoManager.shared
+        for photo in allPhotos {
+            if photo.item == nil {
+                if let filename = photo.filename, !activeFilenames.contains(filename) {
+                    photoManager.deletePhoto(photo: photo, context: self)
+                }
+            }
         }
     }
 }

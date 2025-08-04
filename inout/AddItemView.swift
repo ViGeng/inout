@@ -12,6 +12,7 @@ struct AddItemView: View {
     @State private var category: String = ""
     @State private var notes: String = ""
     @State private var date: Date = Date()
+    @State private var selectedPhotoData: [Data] = []
     @State private var showingAlert = false
     @State private var alertMessage = ""
 
@@ -28,7 +29,8 @@ struct AddItemView: View {
                 type: $type,
                 category: $category,
                 notes: $notes,
-                date: $date
+                date: $date,
+                selectedPhotoData: $selectedPhotoData
             )
             .navigationTitle("Add New Item")
             .toolbar {
@@ -68,6 +70,12 @@ struct AddItemView: View {
             newItem.type = type
             newItem.category = category
             newItem.notes = notes
+
+            for data in selectedPhotoData {
+                if let image = UIImage(data: data) {
+                    _ = PhotoManager.shared.savePhoto(image: image, for: newItem, context: viewContext)
+                }
+            }
 
             do {
                 try viewContext.saveWithHaptics()
