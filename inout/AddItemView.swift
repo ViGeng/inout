@@ -70,7 +70,7 @@ struct AddItemView: View {
             newItem.notes = notes
 
             do {
-                try viewContext.save()
+                try viewContext.saveWithHaptics()
                 presentationMode.wrappedValue.dismiss()
             } catch {
                 alertMessage = "Failed to save item. Please try again."

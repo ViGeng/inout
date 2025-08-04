@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 
 // MARK: - Binding Extension
 
@@ -57,6 +58,17 @@ func groupItemsByDate(items: [Item]) -> [Date: [Item]] {
         return calendar.startOfDay(for: item.timestamp ?? Date())
     }
     return groupedItems
+}
+
+extension NSManagedObjectContext {
+    func saveWithHaptics() throws {
+        do {
+            try save()
+            HapticManager.shared.playSuccess()
+        } catch {
+            throw error
+        }
+    }
 }
 
 

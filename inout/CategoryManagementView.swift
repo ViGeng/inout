@@ -54,7 +54,7 @@ struct CategoryManagementView: View {
             newCategory.type = newCategoryType
 
             do {
-                try viewContext.save()
+                try viewContext.saveWithHaptics()
                 newCategoryName = ""
             } catch {
                 let nsError = error as NSError
@@ -69,7 +69,7 @@ struct CategoryManagementView: View {
             offsets.map { incomeCategories[$0] }.forEach(viewContext.delete)
 
             do {
-                try viewContext.save()
+                try viewContext.saveWithHaptics()
             } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
@@ -83,7 +83,7 @@ struct CategoryManagementView: View {
             offsets.map { outcomeCategories[$0] }.forEach(viewContext.delete)
 
             do {
-                try viewContext.save()
+                try viewContext.saveWithHaptics()
             } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

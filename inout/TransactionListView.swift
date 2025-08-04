@@ -105,7 +105,7 @@ struct TransactionListView: View {
                 offsets.map { itemsForDate[$0] }.forEach(viewContext.delete)
 
                 do {
-                    try viewContext.save()
+                    try viewContext.saveWithHaptics()
                 } catch {
                     // Handle the error appropriately
                 }
