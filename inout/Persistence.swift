@@ -66,6 +66,46 @@ struct PersistenceController {
             newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
             newItem.notes = "This is a sample note for item \(i) from July."
         }
+
+        // Add transactions for last year
+        for i in 0..<5 {
+            let newItem = Item(context: viewContext)
+            newItem.timestamp = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+            let isIncome = i % 2 == 0
+            newItem.type = isIncome ? "Income" : "Outcome"
+            newItem.title = isIncome ? "Last Year Income" : "Last Year Outcome"
+            newItem.amount = isIncome ? NSDecimalNumber(string: "\(i * 250)") : NSDecimalNumber(string: "\(i * 40)")
+            newItem.currency = "JPY"
+            newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
+            newItem.notes = "This is a sample note for item \(i) from last year."
+        }
+
+        // Add transactions for two years ago
+        for i in 0..<5 {
+            let newItem = Item(context: viewContext)
+            newItem.timestamp = Calendar.current.date(byAdding: .year, value: -2, to: Date())
+            let isIncome = i % 2 == 0
+            newItem.type = isIncome ? "Income" : "Outcome"
+            newItem.title = isIncome ? "Two Years Ago Income" : "Two Years Ago Outcome"
+            newItem.amount = isIncome ? NSDecimalNumber(string: "\(i * 300)") : NSDecimalNumber(string: "\(i * 50)")
+            newItem.currency = "CNY"
+            newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
+            newItem.notes = "This is a sample note for item \(i) from two years ago."
+        }
+
+        // Add transactions for three years ago
+        for i in 0..<5 {
+            let newItem = Item(context: viewContext)
+            newItem.timestamp = Calendar.current.date(byAdding: .year, value: -3, to: Date())
+            let isIncome = i % 2 == 0
+            newItem.type = isIncome ? "Income" : "Outcome"
+            newItem.title = isIncome ? "Three Years Ago Income" : "Three Years Ago Outcome"
+            newItem.amount = isIncome ? NSDecimalNumber(string: "\(i * 350)") : NSDecimalNumber(string: "\(i * 60)")
+            newItem.currency = "AUD"
+            newItem.category = isIncome ? incomeCategories[i % incomeCategories.count] : outcomeCategories[i % outcomeCategories.count]
+            newItem.notes = "This is a sample note for item \(i) from three years ago."
+        }
+
         do {
             try viewContext.save()
         } catch {
