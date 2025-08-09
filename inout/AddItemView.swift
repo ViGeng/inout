@@ -21,7 +21,7 @@ struct AddItemView: View {
     }
 
     var body: some View {
-        NavigationView {
+    NavigationView {
             ItemFormView(
                 title: $title,
                 amount: $amount,
@@ -57,7 +57,11 @@ struct AddItemView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-        }
+            .padding(.bottom, 4)
+    }
+    #if os(macOS)
+    .frame(minWidth: 560, idealWidth: 720, minHeight: 640)
+    #endif
     }
 
     private func saveItem() {
@@ -78,7 +82,7 @@ struct AddItemView: View {
             newItem.notes = notes
 
             for data in selectedPhotoData {
-                if let image = UIImage(data: data) {
+                if let image = PlatformImage.fromData(data) {
                     _ = PhotoManager.shared.savePhoto(image: image, for: newItem, context: context)
                 }
             }

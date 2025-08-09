@@ -32,28 +32,92 @@ struct ItemFormView: View {
     var body: some View {
         Form {
             Section(header: Text("Details")) {
-                Picker("Type", selection: $type) {
-                    ForEach(types, id: \.self) {
-                        Text($0)
+                #if os(macOS)
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 10) {
+                    GridRow {
+                        Text("Type").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        Picker("", selection: $type) {
+                            ForEach(types, id: \.self) { Text($0) }
+                        }
+                        .labelsHidden()
+                        .pickerStyle(.segmented)
                     }
+                    .onChange(of: type) { newType in
+                        let filtered = categories.filter { $0.type == newType }
+                        // Only set a default when category is empty; don't override imported/manual values
+                        if category.isEmpty {
+                            category = filtered.first?.name ?? ""
+                        }
+                    }
+
+                    GridRow {
+                        Text("Title").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        TextField("Title", text: $title)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: .infinity)
+                    }
+                    GridRow {
+                        Text("Amount").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        TextField("Amount", text: $amount)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: .infinity)
+                    }
+                    GridRow {
+                        Text("Currency").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        Picker("", selection: $currency) {
+                            ForEach(Locale.commonISOCurrencyCodes, id: \.self) { Text($0).tag($0) }
+                        }
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                    }
+                    GridRow {
+                        Text("Category").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        Picker("", selection: $category) {
+                            ForEach(categories.filter { $0.type == type }) { cat in
+                                Text(cat.name ?? "").tag(cat.name ?? "")
+                            }
+                        }
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                    }
+                    GridRow(alignment: .top) {
+                        Text("Notes").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        TextField("Notes", text: $notes)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: .infinity)
+                    }
+                    GridRow {
+                        Text("Date").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        DatePicker("", selection: $date)
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                #else
+                Picker("Type", selection: $type) {
+                    ForEach(types, id: \.self) { Text($0) }
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .onChange(of: type, perform: { newType in
                     let filteredCategories = categories.filter { $0.type == newType }
-                    if !filteredCategories.contains(where: { $0.name == category }) {
+                    // Only auto-select when category is empty; don’t override an existing value
+                    if category.isEmpty {
                         category = filteredCategories.first?.name ?? ""
                     }
                 })
 
                 TextField("Title", text: $title)
                 TextField("Amount", text: $amount)
-                    #if os(iOS)
                     .keyboardType(.decimalPad)
-                    #endif
                 Picker("Currency", selection: $currency) {
-                    ForEach(Locale.commonISOCurrencyCodes, id: \.self) { currencyCode in
-                        Text(currencyCode).tag(currencyCode)
-                    }
+                    ForEach(Locale.commonISOCurrencyCodes, id: \.self) { Text($0).tag($0) }
                 }
                 Picker("Category", selection: $category) {
                     ForEach(categories.filter { $0.type == type }) { category in
@@ -62,6 +126,7 @@ struct ItemFormView: View {
                 }
                 TextField("Notes", text: $notes)
                 DatePicker("Date", selection: $date)
+                #endif
             }
 
             Section(header: Text("Photos")) {
@@ -73,18 +138,22 @@ struct ItemFormView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(selectedPhotoData, id: \.self) { data in
-                                if let uiImage = UIImage(data: data) {
-                                    photoThumbnail(data: data, uiImage: uiImage)
+                                if let pimg = PlatformImage.fromData(data) {
+                                    photoThumbnail(data: data, platformImage: pimg)
                                 }
                             }
                         }
                     }
                 }
             }
-        }
+    }
+    #if os(macOS)
+    .formStyle(.grouped)
+    #endif
         .onAppear {
             let filteredCategories = categories.filter { $0.type == type }
-            if !filteredCategories.contains(where: { $0.name == category }) {
+            // Only set default if empty; keep imported/custom category strings
+            if category.isEmpty {
                 category = filteredCategories.first?.name ?? ""
             }
         }
@@ -108,17 +177,25 @@ struct ItemFormView: View {
         }
         .toolbar {
             if !photosToDelete.isEmpty {
+                #if os(iOS)
                 ToolbarItemGroup(placement: .bottomBar) {
                     Spacer()
                     Button(action: deleteSelectedPhotos) {
                         Image(systemName: "trash")
                     }
                 }
+                #else
+                ToolbarItem {
+                    Button(action: deleteSelectedPhotos) {
+                        Label("Delete Selected Photos", systemImage: "trash")
+                    }
+                }
+                #endif
             }
         }
         .sheet(item: $photoToView) { identifiableData in
-            if let uiImage = UIImage(data: identifiableData.data) {
-                Image(uiImage: uiImage)
+            if let pimg = PlatformImage.fromData(identifiableData.data) {
+                Image(platformImage: pimg)
                     .resizable()
                     .scaledToFit()
                     .ignoresSafeArea()
@@ -130,8 +207,8 @@ struct ItemFormView: View {
     }
     
     @ViewBuilder
-    private func photoThumbnail(data: Data, uiImage: UIImage) -> some View {
-        Image(uiImage: uiImage)
+    private func photoThumbnail(data: Data, platformImage: PlatformImage) -> some View {
+        Image(platformImage: platformImage)
             .resizable()
             .scaledToFill()
             .frame(width: 100, height: 100)

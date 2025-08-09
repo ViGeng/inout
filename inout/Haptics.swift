@@ -1,6 +1,8 @@
 import Foundation
 import CoreHaptics
+#if os(iOS)
 import UIKit
+#endif
 
 class HapticManager {
     static let shared = HapticManager()
@@ -21,17 +23,23 @@ class HapticManager {
     }
 
     func playSuccess() {
+        #if os(iOS)
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
+        #endif
     }
 
     func playSelection() {
+        #if os(iOS)
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
+        #endif
     }
 
     func playPeek() {
+        #if os(iOS)
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
+        #endif
     }
 }

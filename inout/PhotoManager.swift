@@ -1,7 +1,6 @@
 
 import Foundation
 import CoreData
-import UIKit
 
 class PhotoManager {
     static let shared = PhotoManager()
@@ -16,8 +15,8 @@ class PhotoManager {
 
     private init() {}
 
-    func savePhoto(image: UIImage, for item: Item, context: NSManagedObjectContext) -> Photo? {
-        guard let data = image.jpegData(compressionQuality: 1.0) else { return nil }
+    func savePhoto(image: PlatformImage, for item: Item, context: NSManagedObjectContext) -> Photo? {
+        guard let data = image.toJPEGData() else { return nil }
         let filename = UUID().uuidString + ".jpg"
         let fileURL = photosDirectory.appendingPathComponent(filename)
 
@@ -34,10 +33,14 @@ class PhotoManager {
         }
     }
 
-    func getPhoto(for photo: Photo) -> UIImage? {
+    func getPhoto(for photo: Photo) -> PlatformImage? {
         guard let filename = photo.filename else { return nil }
         let fileURL = photosDirectory.appendingPathComponent(filename)
-        return UIImage(contentsOfFile: fileURL.path)
+        #if os(iOS)
+        return PlatformImage(contentsOfFile: fileURL.path)
+        #else
+        return PlatformImage(contentsOfFile: fileURL.path)
+        #endif
     }
 
     func deletePhoto(photo: Photo, context: NSManagedObjectContext) {

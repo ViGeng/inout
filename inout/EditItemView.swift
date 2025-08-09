@@ -26,7 +26,7 @@ struct EditItemView: View {
     }
 
     var body: some View {
-        NavigationView {
+    NavigationView {
             ItemFormView(
                 title: $title,
                 amount: $amountString,
@@ -63,7 +63,10 @@ struct EditItemView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-        }
+    }
+    #if os(macOS)
+    .frame(minWidth: 560, idealWidth: 720, minHeight: 640)
+    #endif
     }
 
     private func populateStateFromItem() {
@@ -78,7 +81,7 @@ struct EditItemView: View {
         if let photos = item.photos?.array as? [Photo] {
             existingPhotos = photos
             selectedPhotoData = existingPhotos.compactMap { photo in
-                PhotoManager.shared.getPhoto(for: photo)?.jpegData(compressionQuality: 1.0)
+                PhotoManager.shared.getPhoto(for: photo)?.toJPEGData()
             }
         }
     }
@@ -117,9 +120,9 @@ struct EditItemView: View {
             itemInContext.notes = notes.isEmpty ? nil : notes
             itemInContext.timestamp = date
 
-            let currentPhotoData = (itemInContext.photos?.array as? [Photo] ?? []).compactMap { PhotoManager.shared.getPhoto(for: $0)?.jpegData(compressionQuality: 1.0) }
+            let currentPhotoData = (itemInContext.photos?.array as? [Photo] ?? []).compactMap { PhotoManager.shared.getPhoto(for: $0)?.toJPEGData() }
             let photosToDelete = (itemInContext.photos?.array as? [Photo] ?? []).filter { photo in
-                guard let data = PhotoManager.shared.getPhoto(for: photo)?.jpegData(compressionQuality: 1.0) else { return false }
+                guard let data = PhotoManager.shared.getPhoto(for: photo)?.toJPEGData() else { return false }
                 return !selectedPhotoData.contains(data)
             }
 
@@ -132,7 +135,7 @@ struct EditItemView: View {
             }
 
             for data in newPhotoData {
-                if let image = UIImage(data: data) {
+                if let image = PlatformImage.fromData(data) {
                     _ = PhotoManager.shared.savePhoto(image: image, for: itemInContext, context: context)
                 }
             }

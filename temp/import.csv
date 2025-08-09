@@ -1,0 +1,5 @@
+title,amount,currency,type,category,notes,timestamp
+Coffee with team,4.75,USD,Outcome,Food,Latte,2025-08-09T10:15:00.000Z
+Transport - Metro Card,45.5,USD,Outcome,Transport,Monthly reload,2025-08-08T08:20:00.000Z
+Freelance Project ABC,800,GBP,Income,Freelance,Invoice #INV-1001,2025-08-07T15:45:00.000Z
+Groceries - Whole Foods,150,USD,Outcome,Groceries,"Milk, fruits, and ""bread""",2025-08-05T18:30:00.250Z

@@ -64,8 +64,8 @@ struct ItemDetailView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(photoArray) { photo in
-                                if let uiImage = PhotoManager.shared.getPhoto(for: photo) {
-                                    Image(uiImage: uiImage)
+                                if let pimg = PhotoManager.shared.getPhoto(for: photo) {
+                                    Image(platformImage: pimg)
                                         .resizable()
                                         .scaledToFill()
                                         .frame(width: 100, height: 100)
@@ -94,8 +94,8 @@ struct ItemDetailView: View {
             EditItemView(item: item)
         }
         .sheet(item: $selectedPhoto) { photo in
-            if let uiImage = PhotoManager.shared.getPhoto(for: photo) {
-                Image(uiImage: uiImage)
+            if let pimg = PhotoManager.shared.getPhoto(for: photo) {
+                Image(platformImage: pimg)
                     .resizable()
                     .scaledToFit()
                     .ignoresSafeArea()
