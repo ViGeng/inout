@@ -13,6 +13,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Transactions", systemImage: "list.bullet")
                 }
+
+            SubscriptionListView()
+                .tabItem {
+                    Label("Subscriptions", systemImage: "repeat")
+                }
         }
     }
 }

@@ -106,6 +106,25 @@ struct PersistenceController {
             newItem.notes = "This is a sample note for item \(i) from three years ago."
         }
 
+    // Sample subscriptions
+    let s1 = Subscription(context: viewContext)
+    s1.title = "Apple Music"
+    s1.amount = NSDecimalNumber(string: "9.99")
+    s1.currency = "USD"
+    s1.cycleUnit = "month"
+    s1.cycleCount = 1
+    s1.startDate = Calendar.current.date(byAdding: .month, value: -3, to: Date())
+    s1.notes = "Family plan"
+
+    let s2 = Subscription(context: viewContext)
+    s2.title = "Amazon Prime"
+    s2.amount = NSDecimalNumber(string: "139")
+    s2.currency = "USD"
+    s2.cycleUnit = "year"
+    s2.cycleCount = 1
+    s2.startDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+    s2.notes = "Annual billing"
+
         do {
             try viewContext.save()
         } catch {
@@ -121,6 +140,11 @@ struct PersistenceController {
         container = NSPersistentContainer(name: "inout")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        }
+        // Enable lightweight migrations to handle model changes such as new entities
+        if let desc = container.persistentStoreDescriptions.first {
+            desc.shouldMigrateStoreAutomatically = true
+            desc.shouldInferMappingModelAutomatically = true
         }
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {

@@ -91,15 +91,9 @@ struct EditItemView: View {
         HapticManager.shared.playSuccess()
         presentationMode.wrappedValue.dismiss()
 
-        // Perform the save in the background
-        let context = PersistenceController.shared.container.newBackgroundContext()
-        let itemID = item.objectID
-
-        context.perform {
-            guard let itemInContext = context.object(with: itemID) as? Item else {
-                // Handle error: item not found
-                return
-            }
+        // Perform the save on the same context to avoid cross-coordinator issues
+        viewContext.perform {
+            let itemInContext = item
 
             if amountString.isEmpty {
                 itemInContext.amount = nil
@@ -127,7 +121,7 @@ struct EditItemView: View {
             }
 
             for photo in photosToDelete {
-                PhotoManager.shared.deletePhoto(photo: photo, context: context)
+                PhotoManager.shared.deletePhoto(photo: photo, context: viewContext)
             }
             
             let newPhotoData = selectedPhotoData.filter { data in
@@ -136,12 +130,12 @@ struct EditItemView: View {
 
             for data in newPhotoData {
                 if let image = PlatformImage.fromData(data) {
-                    _ = PhotoManager.shared.savePhoto(image: image, for: itemInContext, context: context)
+                    _ = PhotoManager.shared.savePhoto(image: image, for: itemInContext, context: viewContext)
                 }
             }
 
             do {
-                try context.save()
+                try viewContext.save()
             } catch {
                 let nsError = error as NSError
                 print("Unresolved error \(nsError), \(nsError.userInfo)")

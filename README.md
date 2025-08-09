@@ -21,11 +21,13 @@ A simple iOS and macOS app for tracking items with titles, amounts, and timestam
 
 ## Roadmap
 
-- **iCloud Sync:** Integrate iCloud synchronization for seamless data access across devices. (Unfortunately, I cannot afford the Apple Developer Program at the moment, so this feature is not implemented yet.)
-- **Recurring Transactions:** Add support for recurring transactions to automate regular entries, such as monthly bills or subscriptions.
-- **Export/Import:** Implement features to export and import transaction data. The import/export file should be in csv format and ignore all photos (currently). [Implemented]
-- **Improve App Icon:** Enhance the app icon for better visual appeal.
-- **AI Integration:** Import transactions from photos/files(pdf for example) using AI to recognize text and amounts.
+- [ ] **iCloud Sync:** Integrate iCloud synchronization for seamless data access across devices. (Unfortunately, I cannot afford the Apple Developer Program at the moment, so this feature is not implemented yet.)
+- [ ] **Recurring Transactions:** Add support for recurring transactions to automate regular entries, such as monthly bills or subscriptions.
+- [x] **Subscription Management**: Add a sibling of `Transactions`.
+  - [ ] producing transactions
+- [x] **Export/Import:** Implement features to export and import transaction data. The import/export file should be in csv format and ignore all photos (currently).
+- [ ] **Improve App Icon:** Enhance the app icon for better visual appeal.
+- [ ] **AI Integration:** Import transactions from photos/files(pdf for example) using AI to recognize text and amounts.
 
 ## License
 

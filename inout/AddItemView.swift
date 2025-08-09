@@ -69,10 +69,9 @@ struct AddItemView: View {
         HapticManager.shared.playSuccess()
         presentationMode.wrappedValue.dismiss()
 
-        // Perform the save in the background
-        let context = PersistenceController.shared.container.newBackgroundContext()
-        context.perform {
-            let newItem = Item(context: context)
+        // Perform the save on the same context as the UI to avoid cross-coordinator issues
+        viewContext.perform {
+            let newItem = Item(context: viewContext)
             newItem.timestamp = date
             newItem.title = title
             newItem.amount = NSDecimalNumber(string: amount)
@@ -83,15 +82,13 @@ struct AddItemView: View {
 
             for data in selectedPhotoData {
                 if let image = PlatformImage.fromData(data) {
-                    _ = PhotoManager.shared.savePhoto(image: image, for: newItem, context: context)
+                    _ = PhotoManager.shared.savePhoto(image: image, for: newItem, context: viewContext)
                 }
             }
 
             do {
-                try context.save()
+                try viewContext.save()
             } catch {
-                // In a real app, you'd want to handle this error more gracefully,
-                // perhaps by notifying the user that the save failed.
                 let nsError = error as NSError
                 print("Unresolved error \(nsError), \(nsError.userInfo)")
             }
