@@ -185,11 +185,13 @@ extension TransactionListView {
     }
 
     private func importCSV(from url: URL) {
+        let needsAccess = url.startAccessingSecurityScopedResource()
+        defer {
+            if needsAccess {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
         do {
-            #if os(macOS)
-            let needsAccess = url.startAccessingSecurityScopedResource()
-            defer { if needsAccess { url.stopAccessingSecurityScopedResource() } }
-            #endif
             let data = try Data(contentsOf: url)
             guard let text = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) else {
                 alertTitle = "Import Error"
