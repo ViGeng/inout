@@ -69,7 +69,7 @@ struct ItemFormView: View {
                         Text("Currency").foregroundColor(.gray)
                             .frame(width: 100, alignment: .trailing)
                         Picker("", selection: $currency) {
-                            ForEach(Locale.commonISOCurrencyCodes, id: \.self) { Text($0).tag($0) }
+                            ForEach(["USD", "EUR", "CNY", "TRY", "GBP"], id: \ .self) { Text($0).tag($0) }
                         }
                         .labelsHidden()
                         .frame(maxWidth: .infinity)
@@ -117,7 +117,7 @@ struct ItemFormView: View {
                 TextField("Amount", text: $amount)
                     .keyboardType(.decimalPad)
                 Picker("Currency", selection: $currency) {
-                    ForEach(Locale.commonISOCurrencyCodes, id: \.self) { Text($0).tag($0) }
+                    ForEach(["USD", "EUR", "CNY", "TRY", "GBP"], id: \ .self) { Text($0).tag($0) }
                 }
                 Picker("Category", selection: $category) {
                     ForEach(categories.filter { $0.type == type }) { category in

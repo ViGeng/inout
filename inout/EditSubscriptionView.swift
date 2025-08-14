@@ -54,7 +54,8 @@ struct EditSubscriptionView: View {
     private func populate() {
         title = subscription.title ?? ""
         amount = subscription.amount?.stringValue ?? ""
-        currency = subscription.currency ?? (Locale.current.currency?.identifier ?? "USD")
+    let local = Locale.current.currency?.identifier ?? "USD"
+    currency = ["USD", "EUR", "CNY", "TRY", "GBP"].contains(subscription.currency ?? "") ? (subscription.currency ?? local) : local
         cycleUnit = subscription.cycleUnit ?? "month"
         cycleCount = max(1, Int(subscription.cycleCount))
         startDate = subscription.startDate ?? Date()

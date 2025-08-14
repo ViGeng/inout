@@ -9,7 +9,7 @@ struct EditItemView: View {
     // State for the form fields
     @State private var title: String = ""
     @State private var amountString: String = ""
-    @State private var currency: String = ""
+    @State private var currency: String = Locale.current.currency?.identifier ?? "USD"
     @State private var type: String = ""
     @State private var category: String = ""
     @State private var notes: String = ""
@@ -72,7 +72,8 @@ struct EditItemView: View {
     private func populateStateFromItem() {
         title = item.title ?? ""
         amountString = item.amount?.stringValue ?? ""
-        currency = item.currency ?? "USD"
+    let local = Locale.current.currency?.identifier ?? "USD"
+    currency = ["USD", "EUR", "CNY", "TRY", "GBP"].contains(item.currency ?? "") ? (item.currency ?? local) : local
         type = item.type ?? "Outcome"
         category = item.category ?? ""
         notes = item.notes ?? ""

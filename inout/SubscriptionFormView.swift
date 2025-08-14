@@ -58,7 +58,7 @@ struct SubscriptionFormView: View {
                         Text("Currency").foregroundColor(.gray)
                             .frame(width: 100, alignment: .trailing)
                         Picker("", selection: $currency) {
-                            ForEach(Locale.commonISOCurrencyCodes, id: \.self) { Text($0).tag($0) }
+                            ForEach(["USD", "EUR", "CNY", "TRY", "GBP"], id: \ .self) { Text($0).tag($0) }
                         }
                         .labelsHidden()
                     }
@@ -135,7 +135,7 @@ struct SubscriptionFormView: View {
                 TextField("Amount", text: $amount)
                     .keyboardType(.decimalPad)
                 Picker("Currency", selection: $currency) {
-                    ForEach(Locale.commonISOCurrencyCodes, id: \.self) { Text($0).tag($0) }
+                    ForEach(["USD", "EUR", "CNY", "TRY", "GBP"], id: \ .self) { Text($0).tag($0) }
                 }
                 Stepper(value: $cycleCount, in: 1...120) {
                     Text("Every \(cycleCount)")
