@@ -18,6 +18,8 @@ struct TransactionListView: View {
     @State private var showAlert = false
     @State private var alertTitle: String = ""
     @State private var alertMessage: String = ""
+    @State private var showDuplicateSettings = false
+    @State private var duplicateCriteria = CSVManager.DuplicateCriteria.default
 
     private var groupedItems: [Date: [Item]] {
         groupItemsByDate(items: filteredItems)
@@ -97,6 +99,9 @@ struct TransactionListView: View {
                         Button(action: { showImporter = true }) {
                             Label("Import CSV", systemImage: "square.and.arrow.down")
                         }
+                        Button(action: { showDuplicateSettings = true }) {
+                            Label("Import Settings", systemImage: "gear")
+                        }
                     } label: {
                         Image(systemName: "square.and.arrow.down.on.square")
                     }
@@ -119,6 +124,9 @@ struct TransactionListView: View {
                         }
                         Button(action: { showImporter = true }) {
                             Label("Import CSV", systemImage: "square.and.arrow.down")
+                        }
+                        Button(action: { showDuplicateSettings = true }) {
+                            Label("Import Settings", systemImage: "gear")
                         }
                     } label: {
                         Image(systemName: "square.and.arrow.down.on.square")
@@ -146,6 +154,9 @@ struct TransactionListView: View {
             }
             .fileExporter(isPresented: $showExporter, document: exportDocument, contentType: .commaSeparatedText, defaultFilename: defaultExportFilename()) { _ in }
         .alert(isPresented: $showAlert) { Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK"))) }
+        .sheet(isPresented: $showDuplicateSettings) {
+            DuplicateSettingsView(criteria: $duplicateCriteria)
+        }
         }
     }
 
@@ -201,9 +212,9 @@ extension TransactionListView {
             }
 
             let bg = PersistenceController.shared.container.newBackgroundContext()
-            let (imported, skipped) = try CSVManager.importItemsFromCSV(text, into: bg)
+            let result = try CSVManager.importItemsFromCSV(text, into: bg, duplicateCriteria: duplicateCriteria)
             alertTitle = "Import Complete"
-            alertMessage = "Imported: \(imported)\nSkipped: \(skipped)"
+            alertMessage = "Imported: \(result.imported)\nSkipped: \(result.skipped)\nDuplicates: \(result.duplicates)"
             showAlert = true
         } catch {
             alertTitle = "Import Error"
