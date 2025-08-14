@@ -83,7 +83,7 @@ struct DashboardView: View {
                                                         .gridColumnAlignment(.trailing)
                                                 }
                                                 GridRow {
-                                                    Text("Expense:")
+                                                    Text("Outcome:")
                                                         .gridColumnAlignment(.leading)
                                                     Text("\(decimalFormatter.string(from: summary.expenses) ?? "0") \(summary.currency)")
                                                         .foregroundColor(.blue)

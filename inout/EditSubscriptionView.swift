@@ -14,6 +14,8 @@ struct EditSubscriptionView: View {
     @State private var startDate: Date = Date()
     @State private var endDate: Date? = nil
     @State private var notes: String = ""
+    @State private var category: String = ""
+    @State private var type: String = "Outcome"
 
     private var isInputValid: Bool {
         !amount.isEmpty && NSDecimalNumber(string: amount) != .notANumber
@@ -29,7 +31,9 @@ struct EditSubscriptionView: View {
                 cycleCount: $cycleCount,
                 startDate: $startDate,
                 endDate: $endDate,
-                notes: $notes
+                notes: $notes,
+                category: $category,
+                type: $type
             )
             .navigationTitle("Edit Subscription")
             .toolbar {
@@ -56,6 +60,8 @@ struct EditSubscriptionView: View {
         startDate = subscription.startDate ?? Date()
         endDate = subscription.endDate
         notes = subscription.notes ?? ""
+        category = subscription.category ?? ""
+        type = subscription.type ?? "Outcome"
     }
 
     private func save() {
@@ -71,6 +77,8 @@ struct EditSubscriptionView: View {
             subscription.startDate = startDate
             subscription.endDate = endDate
             subscription.notes = notes
+            subscription.category = category
+            subscription.type = type
             do { try viewContext.save() } catch { print("Save subscription error: \(error)") }
         }
     }

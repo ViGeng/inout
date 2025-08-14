@@ -11,6 +11,10 @@ import SwiftUI
 struct inoutApp: App {
     let persistenceController = PersistenceController.shared
 
+    init() {
+        SubscriptionManager.shared.generateTransactions()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

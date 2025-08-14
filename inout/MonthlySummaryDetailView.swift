@@ -38,7 +38,7 @@ struct MonthlySummaryDetailView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Category Expenses for \(month, formatter: monthYearFormatter)").font(.headline)) {
+            Section(header: Text("Category Outcomes for \(month, formatter: monthYearFormatter)").font(.headline)) {
                 ForEach(sortedCategoryExpenses, id: \.key) { category, amount in
                     SummaryCard(title: category, amount: amount, color: .blue, currency: defaultExpenseCurrency)
                 }

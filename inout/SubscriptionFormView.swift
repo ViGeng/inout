@@ -9,8 +9,21 @@ struct SubscriptionFormView: View {
     @Binding var startDate: Date
     @Binding var endDate: Date?
     @Binding var notes: String
+    @Binding var category: String
+    @Binding var type: String
 
-    private let units = ["day", "week", "month", "year"]
+    private let units = ["Day", "Week", "Month", "Year"]
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Category.name, ascending: true)],
+        animation: .default)
+    private var categories: FetchedResults<Category>
+
+    private func validateCategorySelection() {
+        let filteredCategories = categories.filter { $0.type == type }
+        if !filteredCategories.contains(where: { $0.name == category }) {
+            category = filteredCategories.first?.name ?? ""
+        }
+    }
 
     var body: some View {
         // Control to manage optional end date without forcing a value
@@ -98,6 +111,24 @@ struct SubscriptionFormView: View {
                         TextField("Notes", text: $notes)
                             .textFieldStyle(.roundedBorder)
                     }
+                    GridRow(alignment: .top) {
+                        Text("Type").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        Picker("", selection: $type) {
+                            Text("Income").tag("Income")
+                            Text("Outcome").tag("Outcome")
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    GridRow(alignment: .top) {
+                        Text("Category").foregroundColor(.gray)
+                            .frame(width: 100, alignment: .trailing)
+                        Picker("", selection: $category) {
+                            ForEach(categories.filter { $0.type == type }) { category in
+                                Text(category.name ?? "").tag(category.name ?? "")
+                            }
+                        }
+                    }
                 }
                 #else
                 TextField("Title", text: $title)
@@ -111,15 +142,7 @@ struct SubscriptionFormView: View {
                 }
                 Picker("Unit", selection: $cycleUnit) {
                     ForEach(units, id: \.self) { unit in
-                        let short: String = {
-                            switch unit {
-                            case "day": return "Day"
-                            case "week": return "Week"
-                            case "year": return "Year"
-                            default: return "Month"
-                            }
-                        }()
-                        Text(short).tag(unit)
+                        Text(unit).tag(unit)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
@@ -132,11 +155,24 @@ struct SubscriptionFormView: View {
                     DatePicker("End", selection: Binding(get: { endDate ?? startDate }, set: { endDate = $0 }), displayedComponents: [.date])
                 }
                 TextField("Notes", text: $notes)
+                Picker("Type", selection: $type) {
+                    Text("Income").tag("Income")
+                    Text("Outcome").tag("Outcome")
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                Picker("Category", selection: $category) {
+                    ForEach(categories.filter { $0.type == type }) { category in
+                        Text(category.name ?? "").tag(category.name ?? "")
+                    }
+                }
                 #endif
             }
         }
         #if os(macOS)
         .formStyle(.grouped)
         #endif
+        .onAppear(perform: validateCategorySelection)
+        .onChange(of: type) { _ in validateCategorySelection() }
+        .onChange(of: categories.count) { _ in validateCategorySelection() }
     }
 }

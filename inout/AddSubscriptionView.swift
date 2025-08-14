@@ -13,6 +13,8 @@ struct AddSubscriptionView: View {
     @State private var startDate: Date = Date()
     @State private var endDate: Date? = nil
     @State private var notes: String = ""
+    @State private var category: String = ""
+    @State private var type: String = "Outcome"
 
     private var isInputValid: Bool {
         !amount.isEmpty && NSDecimalNumber(string: amount) != .notANumber
@@ -28,7 +30,9 @@ struct AddSubscriptionView: View {
                 cycleCount: $cycleCount,
                 startDate: $startDate,
                 endDate: $endDate,
-                notes: $notes
+                notes: $notes,
+                category: $category,
+                type: $type
             )
             .navigationTitle("Add Subscription")
             .toolbar {
@@ -59,6 +63,8 @@ struct AddSubscriptionView: View {
             s.startDate = startDate
             s.endDate = endDate
             s.notes = notes
+            s.category = category
+            s.type = type
             do { try viewContext.save() } catch { print("Save subscription error: \(error)") }
         }
     }
